@@ -84,6 +84,12 @@ export class NumberUtils {
   }
 
   static trimmedNumber(number: string): string {
+    if (number === '0') {
+      return '0';
+    }
+    if (parseFloat(number) === 0) {
+      return '';
+    }
     // Remove trailing zeroes
     number = number.replace(/0+$/, '');
 
@@ -130,19 +136,18 @@ export class NumberUtils {
         toFixed = 1;
       }
 
-      const abbreviated = (number / matchedLookup.value)
-        .toFixed(toFixed)
-        .replace(trailingZeroes, '');
+      const abbreviated = (absNumber / matchedLookup.value).toFixed(toFixed);
 
       if (format) {
         return (
+          sign +
           new Intl.NumberFormat('en-US', {
             minimumFractionDigits: toFixed,
             maximumFractionDigits: toFixed,
-          }).format(number / matchedLookup.value) + matchedLookup.symbol
+          }).format(absNumber / matchedLookup.value) + matchedLookup.symbol
         );
       } else {
-        return abbreviated + matchedLookup.symbol;
+        return sign + this.trimDecimal(abbreviated) + matchedLookup.symbol;
       }
     }
 
@@ -155,6 +160,14 @@ export class NumberUtils {
     }
 
     if (absNumber < 0.001) {
+      const zeros = -Math.floor(Math.log10(absNumber) + 1);
+      if (zeros >= 3 && zeros < 10) {
+        const subscript = String(zeros)
+          .split('')
+          .map(digit => this.subscriptDigits[parseInt(digit, 10)])
+          .join('');
+        return `${sign}0.0${subscript}1000`;
+      }
       return sign + absNumber.toFixed(8); // More precision for very small numbers
     } else if (absNumber < 0.01) {
       return sign + absNumber.toFixed(6);
@@ -163,7 +176,7 @@ export class NumberUtils {
     } else if (absNumber < 1) {
       return sign + absNumber.toFixed(3);
     } else if (absNumber < 10) {
-      return sign + absNumber.toFixed(1);
+      return sign + number.toFixed(3);
     } else if (absNumber < 100) {
       return sign + absNumber.toFixed(0);
     } else {
