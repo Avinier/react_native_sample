@@ -73,14 +73,13 @@ def enableProguardInReleaseBuilds = false
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 android {
-    // ndkVersion is optional; commenting out to avoid requiring specific NDK installation
-    // ndkVersion rootProject.ext.ndkVersion
+    ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.ethinsights"
+    namespace "com.reactnativetest"
     defaultConfig {
-        applicationId "com.ethinsights"
+        applicationId "com.reactnativetest"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

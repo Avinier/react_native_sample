@@ -1,4 +1,4 @@
-package com.ethinsights
+package com.reactnativetest
 
 import android.app.Application
 import com.facebook.react.PackageList
